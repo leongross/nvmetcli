@@ -325,14 +325,21 @@ class Root(CFSNode):
         '''
 
         for p in self.ports:
+            print(f"p: {p}")
             p.delete()
         for s in self.subsystems:
+            print(f"s: {s}")
             s.delete()
         for h in self.hosts:
+            print(f"h: {h}")
             h.delete()
 
-    def delete_sub(self):
-        for s in self.subsystems:
+    def delete_sub(self, sub: str):
+        '''
+        Remove subsystem entry by name.
+        '''
+        s = Subsystem(sub, 'lookup')
+        if s in self.subsystems:
             s.delete()
 
     def restore(self, config, clear_existing=False, abort_on_error=False):
