@@ -324,12 +324,20 @@ class Root(CFSNode):
         Remove entire current configuration.
         '''
 
+        import traceback
+        traceback.print_stack()
+
         for p in self.ports:
+            print(f"p: {p}")
             p.delete()
         for s in self.subsystems:
+            print(f"s: {s}")
             s.delete()
         for h in self.hosts:
+            print(f"h: {h}")
             h.delete()
+
+        traceback.print_stack()
 
     def delete_sub(self):
         for s in self.subsystems:
