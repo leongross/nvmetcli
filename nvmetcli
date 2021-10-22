@@ -706,8 +706,8 @@ def clear(unused):
     nvme.Root().clear_existing()
 
 
-def delete_sub(unused):
-    nvme.Root().delete_sub()
+def delete_sub(sub: str):
+    nvme.Root().delete_sub(sub)
 
 
 def ls(unused):

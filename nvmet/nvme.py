@@ -339,8 +339,9 @@ class Root(CFSNode):
 
         traceback.print_stack()
 
-    def delete_sub(self):
-        for s in self.subsystems:
+    def delete_sub(self, sub: str):
+        s = Subsystem(sub, 'lookup')
+        if s in self.subsystems:
             s.delete()
 
     def restore(self, config, clear_existing=False, abort_on_error=False):
