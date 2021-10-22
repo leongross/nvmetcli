@@ -324,9 +324,6 @@ class Root(CFSNode):
         Remove entire current configuration.
         '''
 
-        import traceback
-        traceback.print_stack()
-
         for p in self.ports:
             print(f"p: {p}")
             p.delete()
@@ -337,9 +334,10 @@ class Root(CFSNode):
             print(f"h: {h}")
             h.delete()
 
-        traceback.print_stack()
-
     def delete_sub(self, sub: str):
+        '''
+        Remove subsystem entry by name.
+        '''
         s = Subsystem(sub, 'lookup')
         if s in self.subsystems:
             s.delete()
