@@ -109,7 +109,7 @@ class CFSNode(object):
 
         names = [os.path.basename(name).split('_', 1)[1]
                  for name in glob("%s/%s_*" % (self._path, group))
-                     if os.path.isfile(name)]
+                 if os.path.isfile(name)]
 
         if writable is True:
             names = [name for name in names
@@ -202,7 +202,7 @@ class CFSNode(object):
     path = property(_get_path,
                     doc="Get the configFS object path.")
     exists = property(_exists,
-            doc="Is True as long as the underlying configFS object exists. "
+                      doc="Is True as long as the underlying configFS object exists. "
                       + "If the underlying configFS objects gets deleted "
                       + "either by calling the delete() method, or by any "
                       + "other means, it will be False.")
@@ -276,7 +276,7 @@ class Root(CFSNode):
             yield Port(d, 'lookup')
 
     ports = property(_list_ports,
-                doc="Get the list of Ports.")
+                     doc="Get the list of Ports.")
 
     def _list_hosts(self):
         self._check_self()
@@ -330,6 +330,10 @@ class Root(CFSNode):
             s.delete()
         for h in self.hosts:
             h.delete()
+
+    def delete_sub(self):
+        for s in self.subsystems:
+            s.delete()
 
     def restore(self, config, clear_existing=False, abort_on_error=False):
         '''
@@ -821,11 +825,13 @@ class ANAGroup(CFSNode):
                     grpid = index
                     break
             if grpid is None:
-                raise CFSError("All ANA Group IDs 1-%d in use" % self.MAX_GRPID)
+                raise CFSError("All ANA Group IDs 1-%d in use" %
+                               self.MAX_GRPID)
         else:
             grpid = int(grpid)
             if grpid < 1 or grpid > self.MAX_GRPID:
-                raise CFSError("GRPID %d must be 1 to %d" % (grpid, self.MAX_GRPID))
+                raise CFSError("GRPID %d must be 1 to %d" %
+                               (grpid, self.MAX_GRPID))
 
         self.attr_groups = ['ana']
         self._port = port
@@ -923,6 +929,7 @@ class Host(CFSNode):
 def _test():
     from doctest import testmod
     testmod()
+
 
 if __name__ == "__main__":
     _test()

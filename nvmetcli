@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 '''
 Frontend to access to the NVMe target configfs hierarchy
@@ -418,7 +418,8 @@ class UIPortNode(UINode):
         Support older target driver w/o the inline_data_size parameter
         '''
         try:
-            inline_data_size = self.cfnode.get_attr("param", "inline_data_size")
+            inline_data_size = self.cfnode.get_attr(
+                "param", "inline_data_size")
         except Exception as e:
             inline_data_size = "n/a"
         if inline_data_size != "n/a":
@@ -612,7 +613,7 @@ class UIANAGroupsNode(UINode):
 
 class UIANAGroupNode(UINode):
     ui_desc_ana = {
-        'state' : ('string', 'ANA state'),
+        'state': ('string', 'ANA state'),
     }
 
     def __init__(self, parent, cfnode):
@@ -622,6 +623,7 @@ class UIANAGroupNode(UINode):
         info = []
         info.append("state=" + self.cfnode.get_attr("ana", "state"))
         return (", ".join(info), True)
+
 
 class UIHostsNode(UINode):
     def __init__(self, parent):
@@ -667,6 +669,7 @@ def usage():
     print("        %s restore [file_to_restore_from]" % sys.argv[0])
     print("        %s clear" % sys.argv[0])
     print("        %s ls" % sys.argv[0])
+    print("        %s delete" % sys.argv[0])
     sys.exit(-1)
 
 
@@ -703,6 +706,10 @@ def clear(unused):
     nvme.Root().clear_existing()
 
 
+def delete_sub(unused):
+    nvme.Root().delete_sub()
+
+
 def ls(unused):
     shell = configshell.shell.ConfigShell('~/.nvmetcli')
     UIRootNode(shell)
@@ -710,7 +717,7 @@ def ls(unused):
     sys.exit(0)
 
 
-funcs = dict(save=save, restore=restore, clear=clear, ls=ls)
+funcs = dict(save=save, restore=restore, clear=clear, ls=ls, delete=delete_sub)
 
 
 def main():
