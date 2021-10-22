@@ -334,10 +334,19 @@ class Root(CFSNode):
             print(f"h: {h}")
             h.delete()
 
-    def delete_sub(self, sub: str):
+    def delete_sub(self, sub: str, port: int):
         '''
-        Remove subsystem entry by name.
+        Remove subsystem entry by name and subsystem port.
+        The subsystem must no be busy when deleting it.
+        To deactivate it unlink the connection to the exposed port
         '''
+
+        sub_path = f"/sys/kernel/config/nvmet/ports/{port}/subsystems/{sub}"
+        if os.path.islink(sub_path):
+            os.unlink(sub_path)
+        else:
+            raise CFSError(f"subsystem {sub} is not linked to port {port}")
+
         s = Subsystem(sub, 'lookup')
         if s in self.subsystems:
             s.delete()
