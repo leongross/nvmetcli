@@ -669,7 +669,7 @@ def usage():
     print("        %s restore [file_to_restore_from]" % sys.argv[0])
     print("        %s clear" % sys.argv[0])
     print("        %s ls" % sys.argv[0])
-    print("        %s delete" % sys.argv[0])
+    print("        %s delete [subsystem] [port]" % sys.argv[0])
     sys.exit(-1)
 
 
@@ -706,8 +706,8 @@ def clear(unused):
     nvme.Root().clear_existing()
 
 
-def delete_sub(sub: str):
-    nvme.Root().delete_sub(sub)
+def delete_sub(sub: str, port: int):
+    nvme.Root().delete_sub(sub, port)
 
 
 def ls(unused):
@@ -725,9 +725,6 @@ def main():
         print("%s: must run as root." % sys.argv[0], file=sys.stderr)
         sys.exit(-1)
 
-    if len(sys.argv) > 3:
-        usage()
-
     if len(sys.argv) == 2 or len(sys.argv) == 3:
         if sys.argv[1] == "--help":
             usage()
@@ -742,6 +739,11 @@ def main():
 
         funcs[sys.argv[1]](savefile)
         return
+
+    elif len(sys.argv) == 4:
+        if sys.argv[1] == 'delete':
+            delete_sub(sys.argv[2], sys.argv[3])
+            exit(0)
 
     try:
         shell = configshell.shell.ConfigShell('~/.nvmetcli')
